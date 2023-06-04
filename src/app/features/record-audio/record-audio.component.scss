@@ -1,0 +1,23 @@
+.record-audio {
+  .record-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+
+    .button {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  }
+
+  .audio-players {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .audio-player {
+      margin: 0 auto 20px;
+    }
+  }
+}

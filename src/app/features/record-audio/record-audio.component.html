@@ -1,0 +1,53 @@
+<div class="record-audio">
+  <div class="record-actions">
+    <button
+      type="button"
+      (click)="startRecord()"
+      [disabled]="
+        recorderStateSignal() === 'recording' ||
+        recorderStateSignal() === 'paused'
+      "
+      class="button"
+    >
+      Start
+    </button>
+    <button
+      type="button"
+      (click)="pauseRecord()"
+      [disabled]="
+        recorderStateSignal() === 'inactive' ||
+        recorderStateSignal() === 'paused'
+      "
+      class="button"
+    >
+      Pause
+    </button>
+    <button
+      type="button"
+      (click)="resumeRecord()"
+      [disabled]="
+        recorderStateSignal() === 'inactive' ||
+        recorderStateSignal() === 'recording'
+      "
+      class="button"
+    >
+      Resume
+    </button>
+    <button
+      type="button"
+      (click)="stopRecord()"
+      [disabled]="recorderStateSignal() === 'inactive'"
+      class="button"
+    >
+      Stop
+    </button>
+  </div>
+  <div class="audio-players">
+    <audio
+      *ngFor="let audioURL of recordedAudioURLsSignal()"
+      controls
+      [src]="audioURL"
+      class="audio-player"
+    ></audio>
+  </div>
+</div>
