@@ -7,7 +7,7 @@ export class RecordAudioService {
   private readonly ngZone = inject(NgZone);
 
   private mediaRecorderInstance: MediaRecorder | null = null;
-  private isInitCalled = false;
+  private userMediaStream: MediaStream | null = null;
 
   private readonly _recorderStateSignal = signal<
     'inactive' | 'recording' | 'paused'
@@ -22,11 +22,6 @@ export class RecordAudioService {
   }
 
   async initRecord() {
-    if (this.isInitCalled) {
-      return;
-    }
-    this.isInitCalled = true;
-
     if (!navigator.mediaDevices.getUserMedia) {
       console.error('getUserMedia is not supported');
       return;
@@ -36,6 +31,8 @@ export class RecordAudioService {
       video: false,
       audio: true,
     });
+
+    this.userMediaStream = stream;
 
     if (!MediaRecorder.isTypeSupported('audio/webm')) {
       console.error('audio/webm is not supported');
@@ -65,6 +62,8 @@ export class RecordAudioService {
   }
   private setAudioURLs(blob: Blob) {
     const audioURL = window.URL.createObjectURL(blob);
+
+    // updateがリアクティブにならないため、ngZone内で行う
     this.ngZone.run(() => {
       this._recordedAudioURLsSignal.update((audioURLs) => {
         audioURLs.push(audioURL);
@@ -111,5 +110,12 @@ export class RecordAudioService {
     }
     this.mediaRecorderInstance.stop();
     this._recorderStateSignal.set(this.mediaRecorderInstance.state);
+    this.mediaRecorderInstance = null;
+
+    if (!this.userMediaStream) {
+      return;
+    }
+    this.userMediaStream.getTracks().forEach((track) => track.stop());
+    this.userMediaStream = null;
   }
 }
