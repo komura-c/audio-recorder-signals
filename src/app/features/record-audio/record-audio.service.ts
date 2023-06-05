@@ -63,7 +63,7 @@ export class RecordAudioService {
   private setAudioURLs(blob: Blob) {
     const audioURL = window.URL.createObjectURL(blob);
 
-    // updateがリアクティブにならないため、ngZone内で行う
+    // MediaRecorderの関数に渡してる都合で、リアクティブにならないため、ngZone内で行う
     this.ngZone.run(() => {
       this._recordedAudioURLsSignal.update((audioURLs) => {
         audioURLs.push(audioURL);
