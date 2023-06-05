@@ -34,14 +34,7 @@ export class RecordAudioService {
 
     this.userMediaStream = stream;
 
-    if (!MediaRecorder.isTypeSupported('audio/webm')) {
-      console.error('audio/webm is not supported');
-      return;
-    }
-
-    const mediaRecorder = new MediaRecorder(stream, {
-      mimeType: 'audio/webm',
-    });
+    const mediaRecorder = new MediaRecorder(stream);
 
     this.setEvent(mediaRecorder);
 
